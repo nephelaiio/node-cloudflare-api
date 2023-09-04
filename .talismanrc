@@ -1,0 +1,5 @@
+fileignoreconfig:
+  - filename: package-lock.json
+    ignore_detectors: [filecontent]
+  - filename: src/api.ts
+    ignore_detectors: [filecontent]
