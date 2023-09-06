@@ -40,7 +40,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Build project
-        run: make run -- build --production
+        run: make build
 
       - name: Tag release
         uses: mathieudutour/github-tag-action@v6.1
