@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { debug, error } from "@nephelaiio/logger";
+import { debug, error } from '@nephelaiio/logger';
 
 const TIMEOUT_DEFAULT = 5000;
 const RETRIES_DEFAULT = 3;
 
-type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD";
+type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD';
 
 async function retry(fn: () => Promise<any>, times: number = RETRIES_DEFAULT) {
   try {
@@ -41,18 +41,18 @@ async function api(options: ApiOptions): Promise<any> {
   const {
     token,
     path,
-    method = "GET",
+    method = 'GET',
     body = null,
-    ignore_errors = [],
+    ignore_errors = []
   } = options;
   const uri = `https://api.cloudflare.com/client/v4${path}`;
   debug(`Fetching ${method} ${uri}`);
   async function fetchData(url: string) {
     const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
     };
-    const options = { method, headers };
+    const options = { method, body, headers };
     try {
       const response = await retry(async () => await timedFetch(url, options));
       if (response.ok || ignore_errors.some((x) => x == response.status)) {
@@ -69,26 +69,25 @@ async function api(options: ApiOptions): Promise<any> {
       throw new Error(message);
     }
   }
-  const params = new URLSearchParams(path.split("?")[1]);
+  const params = new URLSearchParams(path.split('?')[1]);
   const response = await fetchData(uri);
-  const data: any = response ? response.json() : {result: []};
+  const data: any = response ? response.json() : { result: [] };
   const pages = data.result_info?.total_pages;
-  if (pages > 1 && ! params.has("page")) {
+  if (pages > 1 && !params.has('page')) {
     const range = [...Array(pages - 1).keys()].map((x) => x + 1);
-    const pageRequests = range
-      .map(async (page) => {
-        const separator = uri.includes("?") ? "&" : "?";
-        const pageUri = `${uri}${separator}page=${page}`
-        const pageResponse = await fetchData(pageUri);
-        return pageResponse ? pageResponse.json() : {result: []};
-      });
+    const pageRequests = range.map(async (page) => {
+      const separator = uri.includes('?') ? '&' : '?';
+      const pageUri = `${uri}${separator}page=${page}`;
+      const pageResponse = await fetchData(pageUri);
+      return pageResponse ? pageResponse.json() : { result: [] };
+    });
     const pageData = await Promise.all(pageRequests);
     const result = data.result.concat(pageData.flatMap((x) => x.result));
     debug(`Got ${result.length} results for ${method} ${uri}`);
     return {
       result_info: {
         total_pages: pages,
-        per_page: data.result_info.per_page,
+        per_page: data.result_info.per_page
       },
       // eslint-disable-next-line no-unused-labels
       json: async () => Promise.resolve({ result })
