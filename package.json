@@ -1,6 +1,6 @@
 {
   "name": "@nephelaiio/cloudflare-api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "description": "Cloudflare API wrapper",
   "main": "api.js",
@@ -13,7 +13,7 @@
     "cloudflare",
     "api"
   ],
-  "author": "",
+  "author": "Teodoro Cook <teodoro.cook@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/nephelaiio/node-cloudflare-api/issues"
