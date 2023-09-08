@@ -1,6 +1,6 @@
 {
   "name": "@nephelaiio/cloudflare-api",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "type": "module",
   "description": "Cloudflare API wrapper",
   "main": "api.js",
@@ -31,6 +31,6 @@
     "vitest": "^0.32.0"
   },
   "dependencies": {
-    "@nephelaiio/logger": "^0.0.5"
+    "@nephelaiio/logger": "^0.0.7"
   }
 }
