@@ -32,9 +32,9 @@ async function timedFetch(resource: string, options: any) {
 type ApiOptions = {
   token: string;
   path: string;
-  method: Method;
-  body: object | null;
-  ignore_errors: Array<number>;
+  method?: Method;
+  body?: object | null;
+  ignore_errors?: Array<number>;
 };
 
 async function api(options: ApiOptions): Promise<any> {
