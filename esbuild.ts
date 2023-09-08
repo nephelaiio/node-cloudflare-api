@@ -6,5 +6,5 @@ build({
   platform: 'node',
   format: 'esm',
   target: 'esnext',
-  minify: false,
+  minify: false
 }).catch(() => process.exit(1));
