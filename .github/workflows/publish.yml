@@ -60,8 +60,10 @@ jobs:
 
       - name: Publish package to GPR
         run: |
+          cd dist ; \
           npm publish --verbose --access public --registry https://npm.pkg.github.com
 
       - name: Publish package to NPM
         run: |
+          cd dist ; \
           npm publish --verbose --access public --registry https://registry.npmjs.org/
