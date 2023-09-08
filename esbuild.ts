@@ -6,7 +6,5 @@ build({
   platform: 'node',
   format: 'esm',
   target: 'esnext',
-  minify: false,
-  bundle: true,
-  external: ['@nephelaiio/logger']
+  minify: false
 }).catch(() => process.exit(1));
