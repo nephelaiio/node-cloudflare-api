@@ -10,7 +10,7 @@ type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD';
 async function retry(fn: () => Promise<any>, times: number = RETRIES_DEFAULT) {
   try {
     return await fn();
-  } catch (e) {
+  } catch (e: any) {
     if (times <= 0) {
       debug(e.message);
       throw e;
