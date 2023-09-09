@@ -60,12 +60,10 @@ async function api(options: ApiOptions): Promise<any> {
         return response;
       } else {
         const message = `Unexpected response ${response.status} for ${method} ${uri}`;
-        error(message);
         throw new Error(message);
       }
     } catch (e: any) {
       const message = `Timeout waiting for response for ${method} ${uri}`;
-      error(message);
       throw new Error(message);
     }
   }
