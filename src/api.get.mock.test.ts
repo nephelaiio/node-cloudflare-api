@@ -3,7 +3,7 @@ import { setVerbose, debug } from '@nephelaiio/logger';
 
 import { describe, expect, test, vi } from 'vitest';
 
-const CLOUDFLARE_API_TOKEN = 'token';
+const token = 'token';
 
 setVerbose();
 
@@ -140,32 +140,32 @@ global.fetch = vi
 
 describe('api', () => {
   test('all non-paged api results are pulled', async () => {
-    const request = await api({ token: CLOUDFLARE_API_TOKEN, path: '/zones' });
-    const data = await request.json();
+    const request = await api({ token, path: '/zones' });
+    const data = request;
     debug(JSON.stringify(data.result, null, 2));
     expect(data.result).toStrictEqual(domains);
   });
 
   test('single page api results are not paged', async () => {
     const firstRequest = await api({
-      token: CLOUDFLARE_API_TOKEN,
+      token,
       path: '/zones?page=1'
     });
-    const firstData = await firstRequest.json();
+    const firstData = firstRequest;
     debug(JSON.stringify(firstData.result, null, 2));
     expect(firstData.result[0]).toStrictEqual(domains[0]);
     const secondRequest = await api({
-      token: CLOUDFLARE_API_TOKEN,
+      token,
       path: '/zones?page=2'
     });
-    const secondData = await secondRequest.json();
+    const secondData = secondRequest;
     debug(JSON.stringify(secondData.result, null, 2));
     expect(secondData.result[0]).toStrictEqual(domains[1]);
     const thirdRequest = await api({
-      token: CLOUDFLARE_API_TOKEN,
+      token,
       path: '/zones?page=3'
     });
-    const thirdData = await thirdRequest.json();
+    const thirdData = thirdRequest;
     debug(JSON.stringify(thirdData.result, null, 2));
     expect(thirdData.result[0]).toStrictEqual(domains[2]);
   });
