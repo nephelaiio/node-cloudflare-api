@@ -78,9 +78,8 @@ async function api(options: ApiOptions): Promise<any> {
         throw new Error(message);
       }
     } catch (e: any) {
-      const message = `Timeout waiting for response for ${method} ${uri}`;
+      const message = `Unrecoverable error for ${method} ${uri}: ${e.message}`;
       error(message);
-      debug(e.message);
       throw new Error(message);
     }
   }
