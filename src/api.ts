@@ -50,7 +50,7 @@ async function api(options: ApiOptions): Promise<any> {
   async function fetchData(url: string) {
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`
     };
     const options = { method, body, headers };
     try {
