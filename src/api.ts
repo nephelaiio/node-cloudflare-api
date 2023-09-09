@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { debug, error } from '@nephelaiio/logger';
+import { debug, info, error } from '@nephelaiio/logger';
 
 const TIMEOUT_DEFAULT = 5000;
 const RETRIES_DEFAULT = 3;
@@ -12,6 +12,7 @@ async function retry(fn: () => Promise<any>, times: number = RETRIES_DEFAULT) {
     return await fn();
   } catch (e) {
     if (times <= 0) {
+      debug(e.message);
       throw e;
     } else {
       return await retry(fn, times - 1);
@@ -46,7 +47,7 @@ async function api(options: ApiOptions): Promise<any> {
     ignore_errors = []
   } = options;
   const uri = `https://api.cloudflare.com/client/v4${path}`;
-  debug(`Fetching ${method} ${uri}`);
+  info(`Fetching ${method} ${uri}`);
   async function fetchData(url: string) {
     const headers = {
       'Content-Type': 'application/json',
@@ -56,14 +57,18 @@ async function api(options: ApiOptions): Promise<any> {
     try {
       const response = await retry(async () => await timedFetch(url, options));
       if (response.ok || ignore_errors.some((x) => x == response.status)) {
-        debug(`Got response ${response.status} for ${method} ${uri}`);
+        info(`Got response ${response.status} for ${method} ${uri}`);
         return response;
       } else {
         const message = `Unexpected response ${response.status} for ${method} ${uri}`;
+        debug(await response.text());
+        error(message);
         throw new Error(message);
       }
     } catch (e: any) {
       const message = `Timeout waiting for response for ${method} ${uri}`;
+      error(message);
+      debug(e.message);
       throw new Error(message);
     }
   }
@@ -81,7 +86,7 @@ async function api(options: ApiOptions): Promise<any> {
     });
     const pageData = await Promise.all(pageRequests);
     const result = data.result.concat(pageData.flatMap((x) => x.result));
-    debug(`Got ${result.length} results for ${method} ${uri}`);
+    info(`Got ${result.length} results for ${method} ${uri}`);
     return {
       result_info: {
         total_pages: pages,
