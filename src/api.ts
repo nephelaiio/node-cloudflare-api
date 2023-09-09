@@ -64,14 +64,14 @@ async function api(options: ApiOptions): Promise<any> {
         throw new Error(message);
       }
     } catch (e: any) {
-      const message = `Timeout waiting for reponse for ${method} ${uri}`;
+      const message = `Timeout waiting for response for ${method} ${uri}`;
       error(message);
       throw new Error(message);
     }
   }
   const params = new URLSearchParams(path.split('?')[1]);
   const response = await fetchData(uri);
-  const data: any = response ? response.json() : { result: [] };
+  const data: any = response ? await response.json() : { result: [] };
   const pages = data.result_info?.total_pages;
   if (pages > 1 && !params.has('page')) {
     const range = [...Array(pages - 1).keys()].map((x) => x + 1);
@@ -89,11 +89,13 @@ async function api(options: ApiOptions): Promise<any> {
         total_pages: pages,
         per_page: data.result_info.per_page
       },
-      // eslint-disable-next-line no-unused-labels
-      json: async () => Promise.resolve({ result })
+      success: true,
+      errors: [],
+      messages: [],
+      result
     };
   }
-  return response;
+  return data;
 }
 
 export { api };
