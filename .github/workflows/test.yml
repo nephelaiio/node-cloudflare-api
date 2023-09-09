@@ -21,3 +21,5 @@ jobs:
 
       - name: Run tests
         run: make test
+        env:
+          CLOUDFLARE_ACCOUNT_TOKEN: ${{ secrets.CF_ACCOUNT_TOKEN }}

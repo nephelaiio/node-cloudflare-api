@@ -3,7 +3,7 @@ import { setVerbose, debug } from '@nephelaiio/logger';
 
 import { describe, expect, test, vi } from 'vitest';
 
-const token = process.env.CLOUDFLARE_API_TOKEN || process.env.CF_ACCOUNT_TOKEN;
+const token = process.env.CLOUDFLARE_API_TOKEN;
 
 setVerbose();
 
