@@ -1,7 +1,7 @@
 import { api } from './api';
-import { setVerbose, debug } from '@nephelaiio/logger';
+import { setVerbose } from '@nephelaiio/logger';
 
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 const token = process.env.CLOUDFLARE_API_TOKEN;
 
