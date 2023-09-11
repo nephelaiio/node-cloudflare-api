@@ -92,7 +92,7 @@ async function api(options: ApiOptions): Promise<any> {
   const data: any = response ? await response.json() : { result: [] };
   const pages = data.result_info?.total_pages;
   if (pages > 1 && !params.has('page')) {
-    const range = [...Array(pages - 1).keys()].map((x) => x + 1);
+    const range = [...Array(pages - 1).keys()].map((x) => x + 2);
     const pageRequests = range.map(async (page) => {
       const separator = uri.includes('?') ? '&' : '?';
       const pageUri = `${uri}${separator}page=${page}`;
