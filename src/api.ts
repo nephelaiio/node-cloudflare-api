@@ -8,10 +8,10 @@ const RETRIES_DEFAULT = 3;
 
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD';
 
-function wait(period: number){
-    return new Promise(resolve => {
-        setTimeout(resolve, period);
-    });
+function wait(period: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, period);
+  });
 }
 
 async function retry(fn: () => Promise<any>, times: number, delay: number) {
@@ -23,7 +23,7 @@ async function retry(fn: () => Promise<any>, times: number, delay: number) {
       throw e;
     } else {
       await wait(delay);
-      await retry(fn, times - 1);
+      await retry(fn, times - 1, delay);
     }
   }
 }
@@ -67,18 +67,22 @@ async function api(options: ApiOptions): Promise<any> {
     };
     const options = { method, body, headers };
     try {
-      const response = await retry(async () => await timedFetch(url, options), retries, delay);
+      const response = await retry(
+        async () => await timedFetch(url, options),
+        retries,
+        delay
+      );
       if (response.ok || ignore_errors.some((x) => x == response.status)) {
-        info(`Got response ${response.status} for ${method} ${uri}`);
+        info(`Got response ${response.status} for ${method} ${url}`);
         return response;
       } else {
-        const message = `Unexpected response ${response.status} for ${method} ${uri}`;
+        const message = `Unexpected response ${response.status} for ${method} ${url}`;
         debug(await response.text());
         error(message);
         throw new Error(message);
       }
     } catch (e: any) {
-      const message = `Unrecoverable error for ${method} ${uri}: ${e.message}`;
+      const message = `Unrecoverable error for ${method} ${url}: ${e.message}`;
       error(message);
       throw new Error(message);
     }
