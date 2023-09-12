@@ -82,7 +82,7 @@ const api: (options: ApiOptions) => Promise<any> = async (options) => {
         return response;
       } else {
         const message = `Unexpected response ${response.status} for ${method} ${url}`;
-        debug(await response.text());
+        debug(response);
         error(message);
         throw new Error(message);
       }
