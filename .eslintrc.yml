@@ -5,10 +5,15 @@ env:
   node: true
 extends:
   - eslint:recommended
-  - plugin:@typescript-eslint/recommended
 ignorePatterns:
   - 'dist/'
-overrides: []
+  - 'src/*.test.ts'
+overrides:
+  - files: ['*.ts', '*.tsx']
+    extends:
+      - plugin:@typescript-eslint/recommended
+    parserOptions:
+      project: ['tsconfig.json']
 parser: '@typescript-eslint/parser'
 parserOptions:
   ecmaVersion: latest

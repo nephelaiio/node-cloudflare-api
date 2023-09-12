@@ -11,7 +11,7 @@ install:
 	@bun install 2>&1 >/dev/null
 
 eslint: install
-	@bunx eslint . --ext .ts
+	@bun eslint . --ext .ts
 
 prettier: install
 	@bunx prettier --check .
