@@ -33,11 +33,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install NodeJS
-        uses: actions/setup-node@v3
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org'
+          bun-version: latest
 
       - name: Build project
         run: make build
@@ -47,6 +46,12 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ needs.version.outputs.tag }}
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Configure NPM access credentials
         run: |

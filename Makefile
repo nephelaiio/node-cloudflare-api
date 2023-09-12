@@ -1,30 +1,37 @@
 .PHONY: install lint eslint prettier format build esbuild package clean test
 
+ENVFILE = ./.env
+
+ifneq (,$(wildcard ${ENVFILE}))
+    include ${ENVFILE}
+    export
+endif
+
 install:
-	@npm ci 2>&1 >/dev/null
+	@bun install 2>&1 >/dev/null
 
 eslint: install
-	@npx eslint . --ext .ts
+	@bunx eslint . --ext .ts
 
 prettier: install
-	@npx prettier --check .
+	@bunx prettier --check .
 
 lint: eslint prettier
 
 format: install
-	@npx prettier --write .
+	@bunx prettier --write .
 
-build: install esbuild package
+build: install bundle package
 
-esbuild:
-	npx ts-node esbuild.ts
-	npx tsc --project tsconfig.json --emitDeclarationOnly
+bundle:
+	bun build ${SOURCE} --outfile=${BUNDLE}
+	bunx tsc --project tsconfig.json --emitDeclarationOnly --outFile ${BUNDLE}
 
 package:
 	@cp package.json dist/
 
 clean:
-	@rm -rf dist/
+	@rm -rf $$(dirname ${BUNDLE})
 
 test:
-	npx vitest run
+	bun test

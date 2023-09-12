@@ -2,29 +2,27 @@
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.test.ts"],
   "compilerOptions": {
-    "target": "es2022",
-    "lib": ["es2023", "DOM"],
-    "outDir": "./dist",
-    "types": ["node", "vitest/globals"],
+    // add Bun type definitions
+    "types": ["bun-types"],
 
+    // enable latest features
+    "lib": ["esnext"],
     "module": "esnext",
-    "moduleResolution": "node",
-    "declaration": true,
+    "target": "esnext",
 
-    "resolveJsonModule": true,
-    "allowJs": false,
-    "checkJs": false,
-    "isolatedModules": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
+    // if TS 5.x+
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+
+    "jsx": "react-jsx", // support JSX
+    "allowJs": true, // allow importing `.js` from `.ts`
+    "esModuleInterop": true, // allow default imports for CommonJS modules
+
+    // best practices
     "strict": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "noImplicitAny": false
-  },
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node",
-    "require": ["tsconfig-paths/register"]
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   }
 }
