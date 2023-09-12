@@ -27,17 +27,21 @@ const wait: (period: number) => Promise<void> = async (period) => {
 const retry: (
   fn: AsyncFn,
   times: number,
-  delay: number
-) => Promise<any> = async (fn, times, delay) => {
+  delay: number,
+  message: string,
+  tries: number
+) => Promise<any> = async (fn, times, delay, message, tries = 1) => {
   try {
-    return await fn();
+    debug(`${message} (${tries}/${tries+times})`)
+    const result = await fn();
+    return result;
   } catch (e: any) {
     if (times <= 0) {
       debug(e.message);
       throw e;
     } else {
       await wait(delay);
-      await retry(fn, times - 1, delay);
+      await retry(fn, times - 1, delay, message, tries + 1);
     }
   }
 };
@@ -75,7 +79,8 @@ const api: (options: ApiOptions) => Promise<any> = async (options) => {
       const response = await retry(
         async () => await timedFetch(url, options),
         retries,
-        delay
+        delay,
+        `Fetching ${method} ${uri}`
       );
       if (response.ok || ignore_errors.some((x) => x == response.status)) {
         info(`Got response ${response.status} for ${method} ${url}`);
