@@ -7,14 +7,28 @@ const DELAY_DEFAULT = 1000;
 const RETRIES_DEFAULT = 3;
 
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD';
+type AsyncFn = () => Promise<any>;
+type ApiOptions = {
+  token: string;
+  path: string;
+  method?: Method;
+  body?: object | null;
+  ignore_errors?: Array<number>;
+  retries?: number;
+  delay?: number;
+};
 
-function wait(period: number) {
+const maxPageSize = 50;
+const wait: (period: number) => Promise<void> = async (period) => {
   return new Promise((resolve) => {
     setTimeout(resolve, period);
   });
-}
-
-async function retry(fn: () => Promise<any>, times: number, delay: number) {
+};
+const retry: (
+  fn: AsyncFn,
+  times: number,
+  delay: number
+) => Promise<any> = async (fn, times, delay) => {
   try {
     return await fn();
   } catch (e: any) {
@@ -26,9 +40,11 @@ async function retry(fn: () => Promise<any>, times: number, delay: number) {
       await retry(fn, times - 1, delay);
     }
   }
-}
-
-async function timedFetch(resource: string, options: any) {
+};
+const timedFetch: (resource: string, options: any) => Promise<any> = async (
+  resource,
+  options
+) => {
   const { timeout = TIMEOUT_DEFAULT } = options;
   const controller = new AbortController();
   const signal = controller.signal;
@@ -36,19 +52,8 @@ async function timedFetch(resource: string, options: any) {
   const response = await fetch(resource, { ...options, signal });
   clearTimeout(id);
   return response;
-}
-
-type ApiOptions = {
-  token: string;
-  path: string;
-  method?: Method;
-  body?: object | null;
-  ignore_errors?: Array<number>;
-  retries?: number;
-  delay?: number;
 };
-
-async function api(options: ApiOptions): Promise<any> {
+const api: (options: ApiOptions) => Promise<any> = async (options) => {
   const {
     token,
     path,
@@ -114,6 +119,6 @@ async function api(options: ApiOptions): Promise<any> {
     };
   }
   return data;
-}
+};
 
-export { api };
+export { api, maxPageSize };
