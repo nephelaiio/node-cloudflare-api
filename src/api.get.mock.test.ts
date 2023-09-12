@@ -21,82 +21,82 @@ const domains = [
   }
 ];
 global.fetch = mock((uri, _) => {
-  switch(uri) {
-      case 'https://api.cloudflare.com/client/v4/zones':
-      case 'https://api.cloudflare.com/client/v4/zones?page=1':
-        return Promise.resolve({
-          ok: true,
-          status: 200,
-          json: () => ({
-            result: [domains[0]],
-            result_info: {
-              page: 1,
-              per_page: 1,
-              total_pages: 3,
-              count: 1,
-              total_count: 3
-            },
-            success: true,
-            errors: [],
-            messages: []
-          })
-        });
-      case 'https://api.cloudflare.com/client/v4/zones?page=2':
-        return Promise.resolve({
-          ok: true,
-          status: 200,
-          json: () => ({
-            result: [domains[1]],
-            result_info: {
-              page: 2,
-              per_page: 1,
-              total_pages: 3,
-              count: 1,
-              total_count: 3
-            },
-            success: true,
-            errors: [],
-            messages: []
-          })
-        });
-      case 'https://api.cloudflare.com/client/v4/zones?page=3':
-        return Promise.resolve({
-          ok: true,
-          status: 200,
-          json: () => ({
-            result: [domains[2]],
-            result_info: {
-              page: 1,
-              per_page: 1,
-              total_pages: 3,
-              count: 1,
-              total_count: 3
-            },
-            success: true,
-            errors: [],
-            messages: []
-          })
+  switch (uri) {
+    case 'https://api.cloudflare.com/client/v4/zones':
+    case 'https://api.cloudflare.com/client/v4/zones?page=1':
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({
+          result: [domains[0]],
+          result_info: {
+            page: 1,
+            per_page: 1,
+            total_pages: 3,
+            count: 1,
+            total_count: 3
+          },
+          success: true,
+          errors: [],
+          messages: []
         })
-      default:
-        return Promise.resolve({
-          ok: false,
-          status: 404,
-          json: () => ({
-            result: [],
-            result_info: {
-              page: 1,
-              per_page: 1,
-              total_pages: 1,
-              count: 0,
-              total_count: 0
-            },
-            success: false,
-            errors: [],
-            messages: []
-          })
-        });
+      });
+    case 'https://api.cloudflare.com/client/v4/zones?page=2':
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({
+          result: [domains[1]],
+          result_info: {
+            page: 2,
+            per_page: 1,
+            total_pages: 3,
+            count: 1,
+            total_count: 3
+          },
+          success: true,
+          errors: [],
+          messages: []
+        })
+      });
+    case 'https://api.cloudflare.com/client/v4/zones?page=3':
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({
+          result: [domains[2]],
+          result_info: {
+            page: 1,
+            per_page: 1,
+            total_pages: 3,
+            count: 1,
+            total_count: 3
+          },
+          success: true,
+          errors: [],
+          messages: []
+        })
+      });
+    default:
+      return Promise.resolve({
+        ok: false,
+        status: 404,
+        json: () => ({
+          result: [],
+          result_info: {
+            page: 1,
+            per_page: 1,
+            total_pages: 1,
+            count: 0,
+            total_count: 0
+          },
+          success: false,
+          errors: [],
+          messages: []
+        })
+      });
   }
-})
+});
 
 test('all non-paged api results are pulled', async () => {
   const request = await api({ token, path: '/zones' });
