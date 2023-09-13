@@ -21,14 +21,12 @@ lint: eslint prettier
 format: install
 	@bunx prettier --write .
 
-build: install bundle package
+build: install bundle
 
 bundle:
-	bun build ${SOURCE} --outfile=${BUNDLE} --external='@cloudflare/logger'
+	bun build ${SOURCE} --outfile ${BUNDLE} --external '@nephelaiio/logger'
 	bunx tsc --project tsconfig.json --emitDeclarationOnly --outFile ${BUNDLE}
-
-package:
-	@cp package.json dist/
+	cp package.json dist/
 
 clean:
 	@rm -rf $$(dirname ${BUNDLE})
