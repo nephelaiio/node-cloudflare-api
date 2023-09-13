@@ -24,7 +24,7 @@ format: install
 build: install bundle package
 
 bundle:
-	bun build ${SOURCE} --outfile=${BUNDLE} --external '@cloudflare/logger'
+	bun build ${SOURCE} --outfile=${BUNDLE} --external='@cloudflare/logger'
 	bunx tsc --project tsconfig.json --emitDeclarationOnly --outFile ${BUNDLE}
 
 package:
