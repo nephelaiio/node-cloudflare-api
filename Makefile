@@ -34,4 +34,4 @@ clean:
 	@rm -rf $$(dirname ${BUNDLE})
 
 test:
-	bun test
+	@find $$(dirname ${SOURCE} | sed -e 's/^.\///') -name "*.test.ts" | xargs -n 1 sh -c "bun test --silent $0 || exit 255"
