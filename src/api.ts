@@ -16,6 +16,7 @@ type ApiOptions = {
   ignore_errors?: Array<number>;
   retries?: number;
   delay?: number;
+  exec?: (resource: string, options: any) => Promise<any>;
 };
 
 const maxPageSize = 50;
