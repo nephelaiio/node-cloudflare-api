@@ -16,6 +16,7 @@ type ApiOptions = {
   ignore_errors?: Array<number>;
   retries?: number;
   delay?: number;
+  exec?: (resource: string, options: any) => Promise<any>;
 };
 
 const maxPageSize = 50;
@@ -27,9 +28,12 @@ const wait: (period: number) => Promise<void> = async (period) => {
 const retry: (
   fn: AsyncFn,
   times: number,
-  delay: number
-) => Promise<any> = async (fn, times, delay) => {
+  delay: number,
+  message: string,
+  tries?: number
+) => Promise<any> = async (fn, times, delay, message, tries = 1) => {
   try {
+    debug(`${message} (${tries}/${tries + times})`);
     return await fn();
   } catch (e: any) {
     if (times <= 0) {
@@ -37,7 +41,7 @@ const retry: (
       throw e;
     } else {
       await wait(delay);
-      await retry(fn, times - 1, delay);
+      await retry(fn, times - 1, delay, message, tries + 1);
     }
   }
 };
@@ -45,11 +49,11 @@ const timedFetch: (resource: string, options: any) => Promise<any> = async (
   resource,
   options
 ) => {
-  const { timeout = TIMEOUT_DEFAULT } = options;
+  const { timeout = TIMEOUT_DEFAULT, exec = fetch } = options;
   const controller = new AbortController();
   const signal = controller.signal;
   const id = setTimeout(() => controller.abort(), timeout);
-  const response = await fetch(resource, { ...options, signal });
+  const response = await exec(resource, { ...options, signal });
   clearTimeout(id);
   return response;
 };
@@ -61,7 +65,8 @@ const api: (options: ApiOptions) => Promise<any> = async (options) => {
     body = null,
     ignore_errors = [],
     retries = RETRIES_DEFAULT,
-    delay = DELAY_DEFAULT
+    delay = DELAY_DEFAULT,
+    exec = fetch
   } = options;
   const uri = `https://api.cloudflare.com/client/v4${path}`;
   info(`Fetching ${method} ${uri}`);
@@ -70,22 +75,27 @@ const api: (options: ApiOptions) => Promise<any> = async (options) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     };
-    const options = { method, body, headers };
+    const options = { method, body, headers, exec };
     try {
       const response = await retry(
         async () => await timedFetch(url, options),
         retries,
-        delay
+        delay,
+        `Fetching ${method} ${uri}`
       );
+      if (!response) {
+        const message = `Got empty response for ${method} ${url}`;
+        info(message);
+        throw new Error(message);
+      }
       if (response.ok || ignore_errors.some((x) => x == response.status)) {
         info(`Got response ${response.status} for ${method} ${url}`);
         return response;
-      } else {
-        const message = `Unexpected response ${response.status} for ${method} ${url}`;
-        debug(await response.text());
-        error(message);
-        throw new Error(message);
       }
+      const message = `Unexpected response ${response.status} for ${method} ${url}`;
+      debug(JSON.stringify(response));
+      error(message);
+      throw new Error(message);
     } catch (e: any) {
       const message = `Unrecoverable error for ${method} ${url}: ${e.message}`;
       error(message);

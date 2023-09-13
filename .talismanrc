@@ -1,5 +1,7 @@
 fileignoreconfig:
-  - filename: package-lock.json
+  - filename: .env
+    ignore_detectors: [filename]
+  - filename: bun.lockb
     ignore_detectors: [filecontent]
   - filename: src/api.ts
     ignore_detectors: [filecontent]
