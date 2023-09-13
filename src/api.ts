@@ -32,7 +32,7 @@ const retry: (
   tries?: number
 ) => Promise<any> = async (fn, times, delay, message, tries = 1) => {
   try {
-    debug(`${message} (${tries}/${tries+times})`)
+    debug(`${message} (${tries}/${tries + times})`);
     return await fn();
   } catch (e: any) {
     if (times <= 0) {
