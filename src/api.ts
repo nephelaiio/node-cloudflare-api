@@ -29,12 +29,11 @@ const retry: (
   times: number,
   delay: number,
   message: string,
-  tries: number
+  tries?: number
 ) => Promise<any> = async (fn, times, delay, message, tries = 1) => {
   try {
     debug(`${message} (${tries}/${tries+times})`)
-    const result = await fn();
-    return result;
+    return await fn();
   } catch (e: any) {
     if (times <= 0) {
       debug(e.message);
@@ -82,15 +81,19 @@ const api: (options: ApiOptions) => Promise<any> = async (options) => {
         delay,
         `Fetching ${method} ${uri}`
       );
+      if (!response) {
+        const message = `Got empty response for ${method} ${url}`;
+        info(message);
+        throw new Error(message);
+      }
       if (response.ok || ignore_errors.some((x) => x == response.status)) {
         info(`Got response ${response.status} for ${method} ${url}`);
         return response;
-      } else {
-        const message = `Unexpected response ${response.status} for ${method} ${url}`;
-        debug(response);
-        error(message);
-        throw new Error(message);
       }
+      const message = `Unexpected response ${response.status} for ${method} ${url}`;
+      debug(response);
+      error(message);
+      throw new Error(message);
     } catch (e: any) {
       const message = `Unrecoverable error for ${method} ${url}: ${e.message}`;
       error(message);
