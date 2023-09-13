@@ -6,7 +6,7 @@ const token = process.env.CLOUDFLARE_API_TOKEN;
 
 setVerbose();
 
-test('token should be truthy', async () => {
+test(' token should be truthy', async () => {
   expect(token).toBeTruthy();
 });
 
