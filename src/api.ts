@@ -91,7 +91,7 @@ const api: (options: ApiOptions) => Promise<any> = async (options) => {
         return response;
       }
       const message = `Unexpected response ${response.status} for ${method} ${url}`;
-      debug(response);
+      debug(JSON.stringify(response));
       error(message);
       throw new Error(message);
     } catch (e: any) {
