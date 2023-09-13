@@ -6,7 +6,7 @@ const token = 'token';
 
 setVerbose();
 
-fetch = mock((uri, _) => {
+const fetchMock = mock((uri, _) => {
   switch (uri) {
     case 'https://api.cloudflare.com/client/v4/zones':
     case 'https://api.cloudflare.com/client/v4/zones?page=1':
@@ -99,6 +99,7 @@ const domains = [
 ];
 
 test('all non-paged api results are pulled', async () => {
+  fetch = fetchMock;
   const request = await api({ token, path: '/zones' });
   const data = request;
   debug(JSON.stringify(data.result, null, 2));
@@ -106,6 +107,7 @@ test('all non-paged api results are pulled', async () => {
 });
 
 test('single page api results are not paged', async () => {
+  fetch = fetchMock;
   const firstRequest = await api({
     token,
     path: '/zones?page=1'
