@@ -6,7 +6,7 @@ const token = 'token';
 
 setVerbose();
 
-const fetchMock = mock((uri, _) => {
+const exec = mock((uri, _) => {
   switch (uri) {
     case 'https://api.cloudflare.com/client/v4/zones':
     case 'https://api.cloudflare.com/client/v4/zones?page=1':
@@ -99,32 +99,33 @@ const domains = [
 ];
 
 test('all non-paged api results are pulled', async () => {
-  fetch = fetchMock;
-  const request = await api({ token, path: '/zones' });
+  const request = await api({ token, path: '/zones', exec });
   const data = request;
   debug(JSON.stringify(data.result, null, 2));
   expect(data.result).toStrictEqual(domains);
 });
 
 test('single page api results are not paged', async () => {
-  fetch = fetchMock;
   const firstRequest = await api({
     token,
-    path: '/zones?page=1'
+    path: '/zones?page=1',
+    exec
   });
   const firstData = firstRequest;
   debug(JSON.stringify(firstData.result, null, 2));
   expect(firstData.result[0]).toStrictEqual(domains[0]);
   const secondRequest = await api({
     token,
-    path: '/zones?page=2'
+    path: '/zones?page=2',
+    exec
   });
   const secondData = secondRequest;
   debug(JSON.stringify(secondData.result, null, 2));
   expect(secondData.result[0]).toStrictEqual(domains[1]);
   const thirdRequest = await api({
     token,
-    path: '/zones?page=3'
+    path: '/zones?page=3',
+    exec
   });
   const thirdData = thirdRequest;
   debug(JSON.stringify(thirdData.result, null, 2));

@@ -48,11 +48,11 @@ const timedFetch: (resource: string, options: any) => Promise<any> = async (
   resource,
   options
 ) => {
-  const { timeout = TIMEOUT_DEFAULT } = options;
+  const { timeout = TIMEOUT_DEFAULT, exec = fetch } = options;
   const controller = new AbortController();
   const signal = controller.signal;
   const id = setTimeout(() => controller.abort(), timeout);
-  const response = await fetch(resource, { ...options, signal });
+  const response = await exec(resource, { ...options, signal });
   clearTimeout(id);
   return response;
 };
@@ -64,7 +64,8 @@ const api: (options: ApiOptions) => Promise<any> = async (options) => {
     body = null,
     ignore_errors = [],
     retries = RETRIES_DEFAULT,
-    delay = DELAY_DEFAULT
+    delay = DELAY_DEFAULT,
+    exec = fetch
   } = options;
   const uri = `https://api.cloudflare.com/client/v4${path}`;
   info(`Fetching ${method} ${uri}`);
@@ -73,7 +74,7 @@ const api: (options: ApiOptions) => Promise<any> = async (options) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     };
-    const options = { method, body, headers };
+    const options = { method, body, headers, exec };
     try {
       const response = await retry(
         async () => await timedFetch(url, options),
