@@ -1,6 +1,6 @@
 {
   "name": "@nephelaiio/cloudflare-api",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "description": "Cloudflare API wrapper",
   "main": "api.js",
@@ -20,9 +20,11 @@
   },
   "homepage": "https://github.com/nephelaiio/node-cloudflare-api#readme",
   "devDependencies": {
+    "@types/node": "^20.6.0",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.7.0",
     "bun-types": "^1.0.1",
+    "esbuild": "^0.19.2",
     "eslint": "^8.48.0",
     "prettier": "^3.0.3",
     "tsconfig-paths": "^4.2.0",
