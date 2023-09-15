@@ -9,7 +9,7 @@ type zoneOptions = {
     exec?: ApiFunction;
 }
 
-const zoneInfo: (options: ZoneOptions) => Promise<any> = (options: zoneOptions) => {
+const zoneInfo: (options: ZoneOptions) => Promise<[any]> = (options: zoneOptions) => {
     const  { token, zone = null, exec = api } = options;
     const path = zone ? `/zones?name=${zone}` : `/zones?per_page=${maxPageSize}`;
     const zones = await exec({ token, path });
