@@ -6,6 +6,20 @@ const token = 'token';
 
 setVerbose();
 
+const domains = [
+  {
+    id: '00000000000000000000000000000001',
+    name: 'domain1.nephelai.io'
+  },
+  {
+    id: '00000000000000000000000000000002',
+    name: 'domain2.nephelai.io'
+  },
+  {
+    id: '00000000000000000000000000000003',
+    name: 'domain3.nephelai.io'
+  }
+];
 const exec = mock((uri, _) => {
   switch (uri) {
     case 'https://api.cloudflare.com/client/v4/zones':
@@ -83,20 +97,6 @@ const exec = mock((uri, _) => {
       });
   }
 });
-const domains = [
-  {
-    id: '00000000000000000000000000000001',
-    name: 'domain1.nephelai.io'
-  },
-  {
-    id: '00000000000000000000000000000002',
-    name: 'domain2.nephelai.io'
-  },
-  {
-    id: '00000000000000000000000000000003',
-    name: 'domain3.nephelai.io'
-  }
-];
 
 test('all non-paged api results are pulled', async () => {
   const request = await api({ token, path: '/zones', exec });
