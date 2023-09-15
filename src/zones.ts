@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type { ApiFunction } from './api'
 import { api, maxPageSize } from './api'
 
@@ -7,7 +9,7 @@ type zoneOptions = {
     exec?: ApiFunction;
 }
 
-async function zoneInfo(options: zoneOptions) {
+const zoneInfo: (options: ZoneOptions) => Promise<any> = (options: zoneOptions) => {
     const  { token, zone = null, exec = api } = options;
     const path = zone ? `/zones?name=${zone}` : `/zones?per_page=${maxPageSize}`;
     const zones = await exec({ token, path });
