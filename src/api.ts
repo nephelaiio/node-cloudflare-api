@@ -7,7 +7,8 @@ const DELAY_DEFAULT = 1000;
 const RETRIES_DEFAULT = 3;
 
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD';
-type AsyncFn = () => Promise<any>;
+type AsyncFunction = () => Promise<any>;
+type ApiFunction = (options: ApiOptions) => Promise<any>;
 type ApiOptions = {
   token: string;
   path: string;
@@ -26,7 +27,7 @@ const wait: (period: number) => Promise<void> = async (period) => {
   });
 };
 const retry: (
-  fn: AsyncFn,
+  fn: AsyncFunction,
   times: number,
   delay: number,
   message: string,
@@ -57,7 +58,7 @@ const timedFetch: (resource: string, options: any) => Promise<any> = async (
   clearTimeout(id);
   return response;
 };
-const api: (options: ApiOptions) => Promise<any> = async (options) => {
+const api: ApiFunction = async (options) => {
   const {
     token,
     path,
@@ -132,3 +133,4 @@ const api: (options: ApiOptions) => Promise<any> = async (options) => {
 };
 
 export { api, maxPageSize };
+export type { ApiFunction };
