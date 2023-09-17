@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ApiFunction } from '../api';
 import { api, maxPageSize } from '../api';
-import { zoneInfo } from '../zones';
+import { zoneInfo } from '../zone';
 import { info } from '@nephelaiio/logger';
 
 type PackageOptions = {
   token: string;
-  zone?: string | null;
-  packageName?: string | null;
+  zone?: string;
+  packageName?: string;
   exec?: ApiFunction;
 };
 
@@ -20,7 +20,7 @@ const wafPackageList: (options: PackageOptions) => Promise<any[]> = async (
     : 'all waf packages';
   const message = `Fetching ${packageMessage} for ${zoneMessage}`;
   info(message);
-  const { token, zone = null, packageName = null, exec = api } = options;
+  const { token, zone = undefined, packageName = null, exec = api } = options;
   const zones = await zoneInfo({ token, zone, exec });
   const packageQuery = zones.map(async (z) => {
     const zoneId = (await z).id;

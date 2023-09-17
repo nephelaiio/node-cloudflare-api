@@ -1,4 +1,4 @@
-import { zoneInfo } from './zones';
+import { zoneInfo } from './zone';
 import { maxPageSize } from './api';
 import { info, error, setVerbose } from '@nephelaiio/logger';
 import { expect, test, mock } from 'bun:test';
