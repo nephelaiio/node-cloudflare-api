@@ -1,5 +1,5 @@
 import { mock } from 'bun:test';
-import { info } from '@nephelaiio/logger';
+import { info, error } from '@nephelaiio/logger';
 import { maxPageSize } from './api';
 
 const token = 'token';
